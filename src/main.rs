@@ -10,10 +10,10 @@ fn main() {
     let file = File::open("sudoku.csv").unwrap();
     let reader = io::BufReader::new(file);
     let lines = reader.lines();
-    
+
     let mut nr = 0;
-    let mut max:f64 = 0.0;
-    let mut min:f64 = 10000.0;
+    let mut max: f64 = 0.0;
+    let mut min: f64 = 10000.0;
     for line in lines.skip(1) {
         let z = line.unwrap();
         let tokens: Vec<&str> = z.split(',').collect();
@@ -29,7 +29,7 @@ fn main() {
         if f < min {
             min = f;
         }
-        
+
         let solution_file = tokens[1].to_string();
         match solution {
             None => {
