@@ -18,12 +18,14 @@ pub struct Board {
 
 impl Board {
     pub fn from_string(s: String) -> Board {
+        debug_assert!(s.len() == 81);
+
         let mut board = Board {
             rows: [0; HEIGHT],
             columns: [0; WIDTH],
             blocks: [0; NR_OF_BLOCKS],
             board: [0; NR_OF_CELLS],
-        };
+        };     
         let bytes = s.as_bytes();
 
         for (idx, digit ) in bytes.iter().enumerate() {
@@ -34,6 +36,8 @@ impl Board {
     }
 
     fn is_valid(&self, idx: usize, nr: u32) -> bool {
+        debug_assert!(idx < 81);
+       
         let y = idx / HEIGHT;
         let bitvalue: u32 = 1 << nr;
         if (self.rows[y] & bitvalue) != 0 {
@@ -54,10 +58,12 @@ impl Board {
     }
 
     fn is_occupied(&self, idx: usize) -> bool {
+        debug_assert!(idx < 81);
         self.board[idx] != 0
     }
 
     fn set(&self, idx: usize, nr: u32) -> Board {
+        debug_assert!(idx < 81);
         let y = idx / HEIGHT;
         let x = idx % WIDTH;
 
@@ -119,4 +125,53 @@ pub fn solve(b: Board, start_idx: usize) -> Option<Board> {
         }
     }
     None
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn valid_on_empty() {
+        let b = Board::from_string("000000000000000000000000000000000000000000000000000000000000000000000000000000000".to_string());
+        assert!(b.is_valid(0, 1));
+    }
+    #[test]
+    fn not_valid_on_position() {
+        let b = Board::from_string("100000000000000000000000000000000000000000000000000000000000000000000000000000000".to_string());
+        assert!(!b.is_valid(0, 1));
+    }
+    #[test]
+    fn not_valid_on_row() {
+        let b = Board::from_string("010000000000000000000000000000000000000000000000000000000000000000000000000000000".to_string());
+        assert!(!b.is_valid(0, 1));
+    }
+    #[test]
+    fn not_valid_on_column() {
+        let b = Board::from_string("000000000100000000000000000000000000000000000000000000000000000000000000000000000".to_string());
+        assert!(!b.is_valid(0, 1));
+    }
+    #[test]
+    fn not_valid_on_block() {
+        let b = Board::from_string("000000000010000000000000000000000000000000000000000000000000000000000000000000000".to_string());
+        assert!(!b.is_valid(0, 1));
+    }
+    #[test]
+    fn occupied_on_empty() {
+        let b = Board::from_string("000000000000000000000000000000000000000000000000000000000000000000000000000000000".to_string());
+        assert!(!b.is_occupied(0));
+    }
+    
+    #[test]
+    fn not_occupied_on_set() {
+        let b = Board::from_string("100000000000000000000000000000000000000000000000000000000000000000000000000000000".to_string());
+        assert!(b.is_occupied(0));
+    }
+
+    #[test]
+    fn occupied_on_set() {
+        let b = Board::from_string("000000000000000000000000000000000000000000000000000000000000000000000000000000000".to_string());
+        let b2 = b.set(0,2);
+        assert!(b2.is_occupied(0));
+    }
 }
