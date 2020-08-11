@@ -1,6 +1,8 @@
 # sudoku
 Sudoko solver in rust
 
+[![Build Status](https://travis-ci.com/jlamain/sudoku.svg?branch=master)](https://travis-ci.com/jlamain/sudoku)
+
 This is my personal rust solver to help me learn the Rust programming language.
 
 It calculates the solutions for 1000000 soduku puzzles. The test set can be found at: https://www.kaggle.com/bryanpark/sudoku
