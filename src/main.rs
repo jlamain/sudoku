@@ -16,11 +16,13 @@ fn main() {
     let mut min: f64 = 10000.0;
     for line in lines.skip(1) {
         let z = line.unwrap();
-        let tokens: Vec<&str> = z.split(',').collect();
+        let mut tokens = z.split(',');
+        let puzzle_str = tokens.next().unwrap();
+        let solution_str = tokens.next().unwrap();
 
         let now = Instant::now();
 
-        let solution = board::solve(board::Board::from_string(tokens[0].to_string()), 0);
+        let solution = board::solve(board::Board::from_str(puzzle_str), 0);
         let elapsed = now.elapsed();
         let f = elapsed.as_seconds_f64();
         if f > max {
@@ -30,17 +32,16 @@ fn main() {
             min = f;
         }
 
-        let solution_file = tokens[1].to_string();
         match solution {
             None => {
-                println!("Not solved ! {}", tokens[0].to_string());
+                println!("Not solved ! {}", puzzle_str);
             }
             Some(b) => {
                 let solution_string = b.to_string();
-                if solution_file != solution_string {
+                if solution_str != solution_string {
                     println!(
                         "wrong solve: {} not equal to {}",
-                        solution_file, solution_string
+                        solution_str, solution_string
                     );
                 }
                 print!("{}\r", nr);
