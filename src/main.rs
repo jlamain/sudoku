@@ -2,8 +2,29 @@ extern crate time;
 use std::fs::File;
 use std::io::{self, BufRead};
 use time::Instant;
+use rayon::prelude::*;
 
 mod board;
+
+fn try_solve( puzzle_str: &str, solution_str: &str)
+{
+    let solution = board::solve(board::Board::from_str(puzzle_str), 0);
+
+    match solution {
+        None => {
+            println!("Not solved ! {}", puzzle_str);
+        }
+        Some(b) => {
+            let solution_string = &b.to_string();
+            if solution_str != solution_string {
+                println!(
+                    "wrong solve: {} not equal to {}",
+                    solution_str, solution_string
+                );
+            }
+        }
+    }
+}
 
 fn main() {
     // File hosts must exist in current path before this produces output
@@ -11,43 +32,16 @@ fn main() {
     let reader = io::BufReader::new(file);
     let lines = reader.lines();
 
-    let mut nr = 0;
-    let mut max: f64 = 0.0;
-    let mut min: f64 = 10000.0;
+    let mut v_all: Vec<(String, String)> = Vec::new();
+
     for line in lines.skip(1) {
         let z = line.unwrap();
         let mut tokens = z.split(',');
-        let puzzle_str = tokens.next().unwrap();
-        let solution_str = tokens.next().unwrap();
-
-        let now = Instant::now();
-
-        let solution = board::solve(board::Board::from_str(puzzle_str), 0);
-        let elapsed = now.elapsed();
-        let f = elapsed.as_seconds_f64();
-        if f > max {
-            max = f;
-        }
-        if f < min {
-            min = f;
-        }
-
-        match solution {
-            None => {
-                println!("Not solved ! {}", puzzle_str);
-            }
-            Some(b) => {
-                let solution_string = b.to_string();
-                if solution_str != solution_string {
-                    println!(
-                        "wrong solve: {} not equal to {}",
-                        solution_str, solution_string
-                    );
-                }
-                print!("{}\r", nr);
-                nr += 1;
-            }
-        }
+        v_all.push( (tokens.next().unwrap().to_string(), tokens.next().unwrap().to_string()));
     }
-    println!("Min: {} max: {}", min, max);
+    let now = Instant::now();
+
+    v_all.par_iter().for_each(|puzzle|   try_solve(&puzzle.0, &puzzle.1) );
+
+    println!("Solution time: {} seconds ", now.elapsed().as_seconds_f64());
 }
