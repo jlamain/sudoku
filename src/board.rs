@@ -1,6 +1,7 @@
 extern crate time;
 
 use std::fmt;
+type BitField = u16;
 
 const WIDTH: usize = 9;
 const HEIGHT: usize = 9;
@@ -10,10 +11,10 @@ const NR_OF_CELLS: usize = WIDTH * HEIGHT;
 
 #[derive(Copy, Clone)]
 pub struct Board {
-    rows: [u32; HEIGHT],
-    columns: [u32; WIDTH],
-    blocks: [u32; NR_OF_BLOCKS],
-    board: [u32; NR_OF_CELLS],
+    rows: [BitField; HEIGHT],
+    columns: [BitField; WIDTH],
+    blocks: [BitField; NR_OF_BLOCKS],
+    board: [BitField; NR_OF_CELLS],
 }
 
 impl Board {
@@ -30,16 +31,16 @@ impl Board {
 
         for (idx, digit) in bytes.iter().enumerate() {
             let b: u8 = digit - 48;
-            board = board.set(idx, b as u32);
+            board = board.set(idx, b as BitField);
         }
         board
     }
 
-    fn is_valid(&self, idx: usize, nr: u32) -> bool {
+    fn is_valid(&self, idx: usize, nr: BitField) -> bool {
         debug_assert!(idx < 81);
 
         let y = idx / HEIGHT;
-        let bitvalue: u32 = 1 << nr;
+        let bitvalue: BitField = 1 << nr;
         if (self.rows[y] & bitvalue) != 0 {
             return false;
         }
@@ -62,7 +63,7 @@ impl Board {
         self.board[idx] != 0
     }
 
-    fn set(&self, idx: usize, nr: u32) -> Board {
+    fn set(&self, idx: usize, nr: BitField) -> Board {
         debug_assert!(idx < 81);
         let y = idx / HEIGHT;
         let x = idx % WIDTH;
