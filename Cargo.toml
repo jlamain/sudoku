@@ -9,6 +9,8 @@ edition = "2018"
 [dependencies]
 time = "*"
 rayon = "*"
+
+[target.'cfg(unix)'.dependencies]
 afl = "*"
 stringreader = "*"
 
@@ -16,7 +18,7 @@ stringreader = "*"
 name = "sudoku"
 path = "src/main.rs"
 
-[[bin]]
+[[target.'cfg(unix)'.bin]]
 name = "sudokufuzz"
 path = "src/fuzzmain.rs"
 
