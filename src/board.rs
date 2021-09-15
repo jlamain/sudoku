@@ -29,13 +29,19 @@ impl Board {
 
         for (idx, digit) in bytes.iter().enumerate() {
             let b: u8 = digit - 48;
-            board = board.set(idx, b as BitField);
+            if b != 0 {
+                if board.is_valid(idx, b as BitField) {
+                    board = board.set(idx, b as BitField);
+                } else {
+                    eprintln!("Invalid board, nr already placed");
+                    return None;
+                }
+            }
         }
         Some(board)
     }
 
     fn is_valid(&self, idx: usize, nr: BitField) -> bool {
-
         let y = idx / HEIGHT;
         let bitvalue: BitField = 1 << nr;
         if (self.rows[y] & bitvalue) != 0 {
@@ -130,42 +136,42 @@ mod tests {
         let b = Board::from_str(
             "000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         );
-        assert!(b.is_valid(0, 1));
+        assert!(b.unwrap().is_valid(0, 1));
     }
     #[test]
     fn not_valid_on_position() {
         let b = Board::from_str(
             "100000000000000000000000000000000000000000000000000000000000000000000000000000000",
         );
-        assert!(!b.is_valid(0, 1));
+        assert!(!b.unwrap().is_valid(0, 1));
     }
     #[test]
     fn not_valid_on_row() {
         let b = Board::from_str(
             "010000000000000000000000000000000000000000000000000000000000000000000000000000000",
         );
-        assert!(!b.is_valid(0, 1));
+        assert!(!b.unwrap().is_valid(0, 1));
     }
     #[test]
     fn not_valid_on_column() {
         let b = Board::from_str(
             "000000000100000000000000000000000000000000000000000000000000000000000000000000000",
         );
-        assert!(!b.is_valid(0, 1));
+        assert!(!b.unwrap().is_valid(0, 1));
     }
     #[test]
     fn not_valid_on_block() {
         let b = Board::from_str(
             "000000000010000000000000000000000000000000000000000000000000000000000000000000000",
         );
-        assert!(!b.is_valid(0, 1));
+        assert!(!b.unwrap().is_valid(0, 1));
     }
     #[test]
     fn occupied_on_empty() {
         let b = Board::from_str(
             "000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         );
-        assert!(!b.is_occupied(0));
+        assert!(!b.unwrap().is_occupied(0));
     }
 
     #[test]
@@ -173,7 +179,7 @@ mod tests {
         let b = Board::from_str(
             "100000000000000000000000000000000000000000000000000000000000000000000000000000000",
         );
-        assert!(b.is_occupied(0));
+        assert!(b.unwrap().is_occupied(0));
     }
 
     #[test]
@@ -181,7 +187,7 @@ mod tests {
         let b = Board::from_str(
             "000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         );
-        let b2 = b.set(0, 2);
+        let b2 = b.unwrap().set(0, 2);
         assert!(b2.is_occupied(0));
     }
 
@@ -191,7 +197,7 @@ mod tests {
             "500063017001008050690000400000057304032010800000206100008001702973080000206004090";
         let solution_string =
             "584963217321748956697125483169857324732419865845236179458691732973582641216374598";
-        let b = Board::from_str(solve_string);
+        let b = Board::from_str(solve_string).unwrap();
         let solution = solve(b, 0);
 
         match solution {
