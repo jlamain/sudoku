@@ -11,6 +11,16 @@ fn try_solve(puzzle_str: &str, solution_str: &str) {
         return;
     }
 
+    if solution_str.contains('0') {
+        eprintln!("Solution must not contain 0's");
+        return;
+    }
+
+    if puzzle_str.len() != 81 {
+        eprintln!("Invalid puzzle provided");
+        return;
+    }
+
     if !puzzle_str.bytes().all(|c| c.is_ascii_digit()) {
         eprintln!("Puzzle contains invalid chararcters");
         return;

@@ -19,27 +19,22 @@ pub struct Board {
 
 impl Board {
     pub fn from_str(s: &str) -> Option<Board> {
-        if s.len() != 81 {
-            None
-        } else {
-            let mut board = Board {
-                rows: [0; HEIGHT],
-                columns: [0; WIDTH],
-                blocks: [0; NR_OF_BLOCKS],
-                board: [0; NR_OF_CELLS],
-            };
-            let bytes = s.as_bytes();
+        let mut board = Board {
+            rows: [0; HEIGHT],
+            columns: [0; WIDTH],
+            blocks: [0; NR_OF_BLOCKS],
+            board: [0; NR_OF_CELLS],
+        };
+        let bytes = s.as_bytes();
 
-            for (idx, digit) in bytes.iter().enumerate() {
-                let b: u8 = digit - 48;
-                board = board.set(idx, b as BitField);
-            }
-            Some(board)
+        for (idx, digit) in bytes.iter().enumerate() {
+            let b: u8 = digit - 48;
+            board = board.set(idx, b as BitField);
         }
+        Some(board)
     }
 
     fn is_valid(&self, idx: usize, nr: BitField) -> bool {
-        debug_assert!(idx < 81);
 
         let y = idx / HEIGHT;
         let bitvalue: BitField = 1 << nr;
@@ -61,12 +56,10 @@ impl Board {
     }
 
     fn is_occupied(&self, idx: usize) -> bool {
-        debug_assert!(idx < 81);
         self.board[idx] != 0
     }
 
     fn set(&self, idx: usize, nr: BitField) -> Board {
-        debug_assert!(idx < 81);
         let y = idx / HEIGHT;
         let x = idx % WIDTH;
 
