@@ -11,11 +11,11 @@ fn try_solve(puzzle_str: &str, solution_str: &str) {
         return;
     }
 
-    if !puzzle_str.chars().all(char::is_numeric) {
+    if !puzzle_str.bytes().all(|c| c.is_ascii_digit()) {
         eprintln!("Puzzle contains invalid chararcters");
         return;
     }
-    if !solution_str.chars().all(char::is_numeric) {
+    if !solution_str.bytes().all(|c| c.is_ascii_digit()) {
         eprintln!("Solution contains invalid chararcters");
         return;
     }
