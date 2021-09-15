@@ -31,12 +31,8 @@ impl Board {
             let bytes = s.as_bytes();
 
             for (idx, digit) in bytes.iter().enumerate() {
-                if *digit >= 48 && *digit <= 57 {
-                    let b: u8 = digit - 48;
-                    board = board.set(idx, b as BitField);
-                } else {
-                    return None;
-                }
+                let b: u8 = digit - 48;
+                board = board.set(idx, b as BitField);
             }
             Some(board)
         }

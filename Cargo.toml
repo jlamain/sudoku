@@ -9,9 +9,16 @@ edition = "2018"
 [dependencies]
 time = "*"
 rayon = "*"
+afl = "*"
+stringreader = "*"
 
-#[bin]
-#name = "sudoku"
+[[bin]]
+name = "sudoku"
+path = "src/main.rs"
+
+[[bin]]
+name = "sudokufuzz"
+path = "src/fuzzmain.rs"
 
 
 [lib]

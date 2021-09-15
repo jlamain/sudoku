@@ -5,6 +5,21 @@ use time::Instant;
 mod board;
 
 fn try_solve(puzzle_str: &str, solution_str: &str) {
+
+    if solution_str.len() != 81 {
+        eprintln!("Invalid solution provided");
+        return;
+    }
+
+    if !puzzle_str.chars().all(char::is_numeric) {
+        eprintln!("Puzzle contains invalid chararcters");
+        return;
+    }
+    if !solution_str.chars().all(char::is_numeric) {
+        eprintln!("Solution contains invalid chararcters");
+        return;
+    }
+
     match board::Board::from_str(puzzle_str) {
         None => {}
         Some(board) => {
