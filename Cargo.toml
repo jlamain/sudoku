@@ -9,3 +9,11 @@ edition = "2018"
 [dependencies]
 time = "*"
 rayon = "*"
+
+#[bin]
+#name = "sudoku"
+
+
+[lib]
+name = "sudoku"
+
