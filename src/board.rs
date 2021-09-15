@@ -18,22 +18,28 @@ pub struct Board {
 }
 
 impl Board {
-    pub fn from_str(s: &str) -> Board {
-        debug_assert!(s.len() == 81);
+    pub fn from_str(s: &str) -> Option<Board> {
+        if s.len() != 81 {
+            None
+        } else {
+            let mut board = Board {
+                rows: [0; HEIGHT],
+                columns: [0; WIDTH],
+                blocks: [0; NR_OF_BLOCKS],
+                board: [0; NR_OF_CELLS],
+            };
+            let bytes = s.as_bytes();
 
-        let mut board = Board {
-            rows: [0; HEIGHT],
-            columns: [0; WIDTH],
-            blocks: [0; NR_OF_BLOCKS],
-            board: [0; NR_OF_CELLS],
-        };
-        let bytes = s.as_bytes();
-
-        for (idx, digit) in bytes.iter().enumerate() {
-            let b: u8 = digit - 48;
-            board = board.set(idx, b as BitField);
+            for (idx, digit) in bytes.iter().enumerate() {
+                if *digit >= 48 && *digit <= 57 {
+                    let b: u8 = digit - 48;
+                    board = board.set(idx, b as BitField);
+                } else {
+                    return None;
+                }
+            }
+            Some(board)
         }
-        board
     }
 
     fn is_valid(&self, idx: usize, nr: BitField) -> bool {

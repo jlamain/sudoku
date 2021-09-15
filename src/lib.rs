@@ -5,19 +5,23 @@ use time::Instant;
 mod board;
 
 fn try_solve(puzzle_str: &str, solution_str: &str) {
-    let solution = board::solve(board::Board::from_str(puzzle_str), 0);
-
-    match solution {
-        None => {
-            println!("Not solved ! {}", puzzle_str);
-        }
-        Some(b) => {
-            let solution_string = &b.to_string();
-            if solution_str != solution_string {
-                println!(
-                    "wrong solve: {} not equal to {}",
-                    solution_str, solution_string
-                );
+    match board::Board::from_str(puzzle_str) {
+        None => {}
+        Some(board) => {
+            let solution = board::solve(board, 0);
+            match solution {
+                None => {
+                    println!("Not solved ! {}", puzzle_str);
+                }
+                Some(b) => {
+                    let solution_string = &b.to_string();
+                    if solution_str != solution_string {
+                        println!(
+                            "wrong solve: {} not equal to {}",
+                            solution_str, solution_string
+                        );
+                    }
+                }
             }
         }
     }
