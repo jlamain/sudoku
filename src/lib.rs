@@ -5,46 +5,33 @@ use time::Instant;
 mod board;
 
 fn try_solve(puzzle_str: &str, solution_str: &str) {
-
-    if solution_str.len() != 81 {
-        eprintln!("Invalid solution provided");
-        return;
-    }
-
     if solution_str.contains('0') {
         eprintln!("Solution must not contain 0's");
         return;
     }
 
-    if puzzle_str.len() != 81 {
-        eprintln!("Invalid puzzle provided");
-        return;
-    }
+    if let (Some(puzzle), Some(solution)) = (
+        board::Board::from_str(puzzle_str),
+        board::Board::from_str(solution_str),
+    ) {
+        let solution_solved = board::solve(puzzle, 0);
 
-    if !puzzle_str.bytes().all(|c| c.is_ascii_digit()) {
-        eprintln!("Puzzle contains invalid chararcters");
-        return;
-    }
-    if !solution_str.bytes().all(|c| c.is_ascii_digit()) {
-        eprintln!("Solution contains invalid chararcters");
-        return;
-    }
+        match solution_solved {
+            None => {
+                println!("Not solved ! {}", puzzle_str);
+            }
+            Some(solution_solved) => {
+                if solution != solution_solved {
+                    println!(
+                        "wrong solve: {} not equal to {}",
+                        solution.to_string(),
+                        solution_solved.to_string()
+                    );
+                    let a1 = board::Board::from_str(&solution.to_string());
+                    let a2 = board::Board::from_str(&solution_solved.to_string());
 
-    match board::Board::from_str(puzzle_str) {
-        None => {}
-        Some(board) => {
-            let solution = board::solve(board, 0);
-            match solution {
-                None => {
-                    println!("Not solved ! {}", puzzle_str);
-                }
-                Some(b) => {
-                    let solution_string = &b.to_string();
-                    if solution_str != solution_string {
-                        println!(
-                            "wrong solve: {} not equal to {}",
-                            solution_str, solution_string
-                        );
+                    if a1 == None || a2 == None {
+                        eprintln!("Huh");
                     }
                 }
             }
@@ -61,11 +48,9 @@ pub fn read_and_solve(reader: &mut dyn io::BufRead) {
         let mut tokens = z.split(',');
         let puzzle = tokens.next();
         let solution = tokens.next();
-        match (puzzle, solution) {
-            (Some(p), Some(s)) => {
-                v_all.push((p.to_string(), s.to_string()));
-            }
-            _ => (), // ignore empty strings
+
+        if let (Some(p), Some(s)) = (puzzle, solution) {
+            v_all.push((p.to_string(), s.to_string()));
         }
     }
     let now = Instant::now();

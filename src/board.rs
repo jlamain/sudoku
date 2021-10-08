@@ -17,8 +17,24 @@ pub struct Board {
     board: [BitField; NR_OF_CELLS],
 }
 
+impl PartialEq for Board {
+    fn eq(&self, other: &Self) -> bool {
+        self.board == other.board
+    }
+}
+
 impl Board {
     pub fn from_str(s: &str) -> Option<Board> {
+        if s.len() != 81 {
+            eprintln!("Invalid board length {}", s.len());
+            return None;
+        }
+
+        if !s.bytes().all(|c| c.is_ascii_digit()) {
+            eprintln!("Board contains invalid chararcters {}", s);
+            return None;
+        }
+
         let mut board = Board {
             rows: [0; HEIGHT],
             columns: [0; WIDTH],
@@ -33,7 +49,7 @@ impl Board {
                 if board.is_valid(idx, b as BitField) {
                     board = board.set(idx, b as BitField);
                 } else {
-                    eprintln!("Invalid board, nr already placed");
+                    eprintln!("Invalid board, nr already placed {}", s);
                     return None;
                 }
             }
