@@ -6,7 +6,6 @@ mod board;
 
 fn try_solve(puzzle_str: &str, solution_str: &str) {
     if solution_str.contains('0') {
-        eprintln!("Solution must not contain 0's");
         return;
     }
 
