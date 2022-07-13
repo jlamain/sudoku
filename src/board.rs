@@ -29,7 +29,7 @@ impl Board {
             return None;
         }
 
-        if !s.bytes().all(|c| c.is_ascii_digit()) {
+        if !s.is_ascii() {
             return None;
         }
 
