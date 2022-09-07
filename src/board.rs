@@ -145,11 +145,54 @@ mod tests {
     use super::*;
 
     #[test]
+    fn invalid_length() {
+        let b = Board::from_str(
+            "0000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        );
+        assert!(b.is_none());
+    }
+    #[test]
+    fn invalid_chars() {
+        let b = Board::from_str(
+            "ü0000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        );
+        assert!(b.is_none());
+    }
+    #[test]
+    fn invalid_board_duplicate_numbers() {
+        let b = Board::from_str(
+            "110000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        );
+        assert!(b.is_none());
+    }
+    #[test]
     fn valid_on_empty() {
         let b = Board::from_str(
             "000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         );
         assert!(b.unwrap().is_valid(0, 1));
+    }
+
+    #[test]
+    fn board_equal() {
+        let b = Board::from_str(
+            "000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        );
+        let c = Board::from_str(
+            "000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        );
+        assert!(b == c);
+    }
+
+    #[test]
+    fn board_not_equal() {
+        let b = Board::from_str(
+            "000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        );
+        let c = Board::from_str(
+            "000000000000000000000000000000000000000000000000000000000000000000000000000000001",
+        );
+        assert!(b != c);
     }
     #[test]
     fn not_valid_on_position() {
@@ -212,12 +255,6 @@ mod tests {
             "584963217321748956697125483169857324732419865845236179458691732973582641216374598";
         let b = Board::from_str(solve_string).unwrap();
         let solution = solve(b, 0);
-
-        match solution {
-            None => {
-                assert!(false);
-            }
-            Some(b) => assert!(b.to_string() == solution_string),
-        }
+        assert!(solution.unwrap().to_string() == solution_string);
     }
 }
