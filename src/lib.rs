@@ -23,8 +23,8 @@ fn try_solve(puzzle_str: &str, solution_str: &str) {
                 if solution != solution_solved {
                     println!(
                         "wrong solve: {} not equal to {}",
-                        solution.to_string(),
-                        solution_solved.to_string()
+                        solution,
+                        solution_solved
                     );
                     let a1 = board::Board::from_str(&solution.to_string());
                     let a2 = board::Board::from_str(&solution_solved.to_string());
