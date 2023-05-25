@@ -29,7 +29,7 @@ fn try_solve(puzzle_str: &str, solution_str: &str) {
                     let a1 = board::Board::from_str(&solution.to_string());
                     let a2 = board::Board::from_str(&solution_solved.to_string());
 
-                    if a1 == None || a2 == None {
+                    if a1.is_none() || a2.is_none() {
                         eprintln!("Huh");
                     }
                 }

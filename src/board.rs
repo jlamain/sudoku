@@ -39,10 +39,12 @@ impl Board {
             blocks: [0; NR_OF_BLOCKS],
             board: [0; NR_OF_CELLS],
         };
-        let bytes = s.as_bytes();
 
-        for (idx, digit) in bytes.iter().enumerate() {
-            let b: u8 = digit - 48;
+        for (idx, digit) in s.chars().enumerate() {
+            if !digit.is_ascii_digit() {
+                return None;
+            }
+            let b: u32 = digit.to_digit(10).unwrap();
             if b != 0 {
                 if board.is_valid(idx, b as BitField) {
                     board = board.set(idx, b as BitField);
