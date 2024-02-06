@@ -13,11 +13,10 @@ fn main() {
         "sudoku.csv"
     };
 
-    match File::open(name) {
-        Ok(file) => read_and_solve(&mut io::BufReader::new(file)),
-        Err(_) => {
-            eprintln!("Could not open file {}", name);
-            std::process::exit(1);
-        }
+    if let Ok(file) = File::open(name) {
+        read_and_solve(&mut io::BufReader::new(file));
+    } else {
+        eprintln!("Could not open file {name}");
+        std::process::exit(1);
     };
 }

@@ -17,15 +17,11 @@ fn try_solve(puzzle_str: &str, solution_str: &str) {
 
         match solution_solved {
             None => {
-                println!("Not solved ! {}", puzzle_str);
+                println!("Not solved ! {puzzle_str}");
             }
             Some(solution_solved) => {
                 if solution != solution_solved {
-                    println!(
-                        "wrong solve: {} not equal to {}",
-                        solution,
-                        solution_solved
-                    );
+                    println!("wrong solve: {solution} not equal to {solution_solved}");
                     let a1 = board::Board::from_str(&solution.to_string());
                     let a2 = board::Board::from_str(&solution_solved.to_string());
 
@@ -42,9 +38,8 @@ pub fn read_and_solve(reader: &mut dyn io::BufRead) {
     let lines = reader.lines();
     let mut v_all: Vec<(String, String)> = Vec::new();
 
-    for line in lines.skip(1) {
-        let z = line.unwrap();
-        let mut tokens = z.split(',');
+    for line in lines.skip(1).flatten() {
+        let mut tokens = line.split(',');
         let puzzle = tokens.next();
         let solution = tokens.next();
 

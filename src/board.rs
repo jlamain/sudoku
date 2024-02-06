@@ -14,12 +14,12 @@ pub struct Board {
     rows: [BitField; HEIGHT],
     columns: [BitField; WIDTH],
     blocks: [BitField; NR_OF_BLOCKS],
-    board: [BitField; NR_OF_CELLS],
+    cells: [BitField; NR_OF_CELLS],
 }
 
 impl PartialEq for Board {
     fn eq(&self, other: &Self) -> bool {
-        self.board == other.board
+        self.cells == other.cells
     }
 }
 
@@ -37,14 +37,15 @@ impl Board {
             rows: [0; HEIGHT],
             columns: [0; WIDTH],
             blocks: [0; NR_OF_BLOCKS],
-            board: [0; NR_OF_CELLS],
+            cells: [0; NR_OF_CELLS],
         };
 
         for (idx, digit) in s.chars().enumerate() {
             if !digit.is_ascii_digit() {
                 return None;
             }
-            let b: u32 = digit.to_digit(10).unwrap();
+            #[allow(clippy::cast_possible_truncation)]
+            let b: BitField = digit.to_digit(10).unwrap() as BitField;
             if b != 0 {
                 if board.is_valid(idx, b as BitField) {
                     board = board.set(idx, b as BitField);
@@ -77,7 +78,7 @@ impl Board {
     }
 
     fn is_occupied(&self, idx: usize) -> bool {
-        self.board[idx] != 0
+        self.cells[idx] != 0
     }
 
     fn set(&self, idx: usize, nr: BitField) -> Board {
@@ -92,7 +93,7 @@ impl Board {
         let y3: usize = y / BLOCKSIZE;
         let off: usize = y3 * BLOCKSIZE + x3;
         ret.blocks[off] |= 1 << nr;
-        ret.board[idx] = nr;
+        ret.cells[idx] = nr;
 
         ret
     }
@@ -100,12 +101,12 @@ impl Board {
 
 impl fmt::Display for Board {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut ret = "".to_string();
-        for digit in self.board.iter() {
+        let mut ret = String::new();
+        for digit in &self.cells {
             ret.push_str(&digit.to_string());
         }
 
-        write!(f, "{}", ret)
+        write!(f, "{ret}")
     }
 }
 
