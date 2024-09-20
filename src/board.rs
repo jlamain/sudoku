@@ -1,5 +1,3 @@
-extern crate time;
-
 use std::fmt;
 type BitField = u16;
 

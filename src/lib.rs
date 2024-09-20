@@ -1,6 +1,6 @@
 use rayon::prelude::*;
 use std::io::{self, BufRead};
-use time::Instant;
+use std::time::Instant;
 
 mod board;
 
@@ -53,5 +53,5 @@ pub fn read_and_solve(reader: &mut dyn io::BufRead) {
         .par_iter()
         .for_each(|puzzle| try_solve(&puzzle.0, &puzzle.1));
 
-    println!("Solution time: {} seconds ", now.elapsed().as_seconds_f64());
+    println!("Solution time: {:?}", now.elapsed());
 }
