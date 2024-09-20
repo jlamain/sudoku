@@ -1,7 +1,8 @@
 # sudoku
 Sudoko solver in rust
 
-[![Build Status](https://travis-ci.com/jlamain/sudoku.svg?branch=master)](https://travis-ci.com/jlamain/sudoku)
+[![Build](https://github.com/jlamain/sudoku/actions/workflows/build.yml/badge.svg)](https://github.com/jlamain/sudoku/actions/workflows/build.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/jlamain/sudoku}/badge)](https://scorecard.dev/viewer/?uri=github.com/jlamain/sudoku)
 
 This is my personal rust solver to help me learn the Rust programming language.
 
