@@ -3,110 +3,35 @@
 version = 3
 
 [[package]]
-name = "autocfg"
-version = "1.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cdb031dd78e28731d87d56cc8ffef4a8f36ca26c38fe2de700543e627f8a464a"
-
-[[package]]
-name = "cfg-if"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
-
-[[package]]
 name = "crossbeam-deque"
-version = "0.8.1"
+version = "0.8.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6455c0ca19f0d2fbf751b908d5c55c1f5cbc65e03c4225427254b46890bdde1e"
+checksum = "613f8cc01fe9cf1a3eb3d7f488fd2fa8388403e97039e2f73692932e291a770d"
 dependencies = [
- "cfg-if",
  "crossbeam-epoch",
  "crossbeam-utils",
 ]
 
 [[package]]
 name = "crossbeam-epoch"
-version = "0.9.5"
+version = "0.9.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ec02e091aa634e2c3ada4a392989e7c3116673ef0ac5b72232439094d73b7fd"
+checksum = "5b82ac4a3c2ca9c3460964f020e1402edd5753411d7737aa39c3714ad1b5420e"
 dependencies = [
- "cfg-if",
  "crossbeam-utils",
- "lazy_static",
- "memoffset",
- "scopeguard",
 ]
 
 [[package]]
 name = "crossbeam-utils"
-version = "0.8.5"
+version = "0.8.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d82cfc11ce7f2c3faef78d8a684447b40d503d9681acebed6cb728d45940c4db"
-dependencies = [
- "cfg-if",
- "lazy_static",
-]
-
-[[package]]
-name = "deranged"
-version = "0.3.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b42b6fa04a440b495c8b04d0e71b707c585f83cb9cb28cf8cd0d976c315e31b4"
-dependencies = [
- "powerfmt",
-]
+checksum = "22ec99545bb0ed0ea7bb9b8e1e9122ea386ff8a48c0922e43f36d45ab09e0e80"
 
 [[package]]
 name = "either"
-version = "1.6.1"
+version = "1.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
-
-[[package]]
-name = "lazy_static"
-version = "1.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
-
-[[package]]
-name = "memoffset"
-version = "0.6.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "59accc507f1338036a0477ef61afdae33cde60840f4dfe481319ce3ad116ddf9"
-dependencies = [
- "autocfg",
-]
-
-[[package]]
-name = "num-conv"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "51d515d32fb182ee37cda2ccdcb92950d6a3c2893aa280e540671c2cd0f3b1d9"
-
-[[package]]
-name = "powerfmt"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "439ee305def115ba05938db6eb1644ff94165c5ab5e9420d1c1bcedbba909391"
-
-[[package]]
-name = "proc-macro2"
-version = "1.0.86"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5e719e8df665df0d1c8fbfd238015744736151d4445ec0836b8e628aae103b77"
-dependencies = [
- "unicode-ident",
-]
-
-[[package]]
-name = "quote"
-version = "1.0.37"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b5b9d34b8991d19d98081b46eacdd8eb58c6f2b201139f7c5f643cc155a633af"
-dependencies = [
- "proc-macro2",
-]
+checksum = "60b1af1c220855b6ceac025d3f6ecdd2b7c4894bfe9cd9bda4fbb4bc7c0d4cf0"
 
 [[package]]
 name = "rayon"
@@ -129,71 +54,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "scopeguard"
-version = "1.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d29ab0c6d3fc0ee92fe66e2d99f700eab17a8d57d1c1d3b748380fb20baa78cd"
-
-[[package]]
-name = "serde"
-version = "1.0.210"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c8e3592472072e6e22e0a54d5904d9febf8508f65fb8552499a1abc7d1078c3a"
-dependencies = [
- "serde_derive",
-]
-
-[[package]]
-name = "serde_derive"
-version = "1.0.210"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "243902eda00fad750862fc144cea25caca5e20d615af0a81bee94ca738f1df1f"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "sudoku"
 version = "0.1.0"
 dependencies = [
  "rayon",
- "time",
 ]
-
-[[package]]
-name = "syn"
-version = "2.0.77"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9f35bcdf61fd8e7be6caf75f429fdca8beb3ed76584befb503b1569faee373ed"
-dependencies = [
- "proc-macro2",
- "quote",
- "unicode-ident",
-]
-
-[[package]]
-name = "time"
-version = "0.3.36"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5dfd88e563464686c916c7e46e623e520ddc6d79fa6641390f2e3fa86e83e885"
-dependencies = [
- "deranged",
- "num-conv",
- "powerfmt",
- "serde",
- "time-core",
-]
-
-[[package]]
-name = "time-core"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ef927ca75afb808a4d64dd374f00a2adf8d0fcff8e7b184af886c3c87ec4a3f3"
-
-[[package]]
-name = "unicode-ident"
-version = "1.0.13"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e91b56cd4cadaeb79bbf1a5645f6b4f8dc5bde8834ad5894a8db35fda9efa1fe"
