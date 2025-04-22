@@ -17,5 +17,5 @@ fn main() {
     } else {
         eprintln!("Could not open file {name}");
         std::process::exit(1);
-    };
+    }
 }

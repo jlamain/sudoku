@@ -22,7 +22,7 @@ impl PartialEq for Board {
 }
 
 impl Board {
-    pub fn from_str(s: &str) -> Option<Board> {
+    pub fn from_str(s: &str) -> Option<Self> {
         if s.len() != 81 {
             return None;
         }
@@ -31,7 +31,7 @@ impl Board {
             return None;
         }
 
-        let mut board = Board {
+        let mut board = Self {
             rows: [0; HEIGHT],
             columns: [0; WIDTH],
             blocks: [0; NR_OF_BLOCKS],
@@ -55,7 +55,7 @@ impl Board {
         Some(board)
     }
 
-    fn is_valid(&self, idx: usize, nr: BitField) -> bool {
+    const fn is_valid(&self, idx: usize, nr: BitField) -> bool {
         let y = idx / HEIGHT;
         let bitvalue: BitField = 1 << nr;
         if (self.rows[y] & bitvalue) != 0 {
@@ -75,11 +75,11 @@ impl Board {
         true
     }
 
-    fn is_occupied(&self, idx: usize) -> bool {
+    const fn is_occupied(&self, idx: usize) -> bool {
         self.cells[idx] != 0
     }
 
-    fn set(&self, idx: usize, nr: BitField) -> Board {
+    const fn set(&self, idx: usize, nr: BitField) -> Self {
         let y = idx / HEIGHT;
         let x = idx % WIDTH;
 
