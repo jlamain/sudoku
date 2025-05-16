@@ -1,6 +1,8 @@
 use std::fmt;
 type BitField = u16;
 
+use std::str::FromStr;
+
 const WIDTH: usize = 9;
 const HEIGHT: usize = 9;
 const BLOCKSIZE: usize = 3;
@@ -20,15 +22,18 @@ impl PartialEq for Board {
         self.cells == other.cells
     }
 }
+#[derive(Debug, PartialEq)]
+pub struct BoardConversionError;
 
-impl Board {
-    pub fn from_str(s: &str) -> Option<Self> {
+impl FromStr for Board {
+    type Err = BoardConversionError;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         if s.len() != 81 {
-            return None;
+            return Err(BoardConversionError);
         }
 
         if !s.is_ascii() {
-            return None;
+            return Err(BoardConversionError);
         }
 
         let mut board = Self {
@@ -40,7 +45,7 @@ impl Board {
 
         for (idx, digit) in s.chars().enumerate() {
             if !digit.is_ascii_digit() {
-                return None;
+                return Err(BoardConversionError);
             }
             #[allow(clippy::cast_possible_truncation)]
             let b: BitField = digit.to_digit(10).unwrap() as BitField;
@@ -48,13 +53,15 @@ impl Board {
                 if board.is_valid(idx, b as BitField) {
                     board = board.set(idx, b as BitField);
                 } else {
-                    return None;
+                    return Err(BoardConversionError);
                 }
             }
         }
-        Some(board)
+        Ok(board)
     }
+}
 
+impl Board {
     const fn is_valid(&self, idx: usize, nr: BitField) -> bool {
         let y = idx / HEIGHT;
         let bitvalue: BitField = 1 << nr;
@@ -150,21 +157,21 @@ mod tests {
         let b = Board::from_str(
             "0000000000000000000000000000000000000000000000000000000000000000000000000000000000",
         );
-        assert!(b.is_none());
+        assert!(b.is_err());
     }
     #[test]
     fn invalid_chars() {
         let b = Board::from_str(
             "ü0000000000000000000000000000000000000000000000000000000000000000000000000000000",
         );
-        assert!(b.is_none());
+        assert!(b.is_err());
     }
     #[test]
     fn invalid_board_duplicate_numbers() {
         let b = Board::from_str(
             "110000000000000000000000000000000000000000000000000000000000000000000000000000000",
         );
-        assert!(b.is_none());
+        assert!(b.is_err());
     }
     #[test]
     fn valid_on_empty() {

@@ -9,9 +9,9 @@ fn try_solve(puzzle_str: &str, solution_str: &str) {
         return;
     }
 
-    if let (Some(puzzle), Some(solution)) = (
-        board::Board::from_str(puzzle_str),
-        board::Board::from_str(solution_str),
+    if let (Ok(puzzle), Ok(solution)) = (
+        puzzle_str.parse::<board::Board>(),
+        solution_str.parse::<board::Board>(),
     ) {
         let solution_solved = board::solve(puzzle, 0);
 
@@ -22,10 +22,10 @@ fn try_solve(puzzle_str: &str, solution_str: &str) {
             Some(solution_solved) => {
                 if solution != solution_solved {
                     println!("wrong solve: {solution} not equal to {solution_solved}");
-                    let a1 = board::Board::from_str(&solution.to_string());
-                    let a2 = board::Board::from_str(&solution_solved.to_string());
+                    let a1 = solution.to_string().parse::<board::Board>();
+                    let a2 = solution_solved.to_string().parse::<board::Board>();
 
-                    if a1.is_none() || a2.is_none() {
+                    if a1.is_ok() || a2.is_ok() {
                         eprintln!("Huh");
                     }
                 }
