@@ -104,14 +104,19 @@ impl Board {
     }
 }
 
-impl fmt::Display for Board {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl From<Board> for String {
+    fn from(board: Board) -> Self {
         let mut ret = String::new();
-        for digit in &self.cells {
+        for digit in &board.cells {
             ret.push_str(&digit.to_string());
         }
+        ret
+    }
+}
 
-        write!(f, "{ret}")
+impl fmt::Display for Board {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", String::from(*self))
     }
 }
 
@@ -263,7 +268,7 @@ mod tests {
             "584963217321748956697125483169857324732419865845236179458691732973582641216374598";
         let b = Board::from_str(solve_string).unwrap();
         let solution = solve(b, 0);
-        assert!(solution.unwrap().to_string() == solution_string);
+        assert!(String::from(solution.unwrap()) == solution_string);
     }
 
     #[test]
