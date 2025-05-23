@@ -9,7 +9,7 @@ const BLOCKSIZE: usize = 3;
 const NR_OF_BLOCKS: usize = (WIDTH / BLOCKSIZE) * (HEIGHT / BLOCKSIZE);
 const NR_OF_CELLS: usize = WIDTH * HEIGHT;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Board {
     rows: [BitField; HEIGHT],
     columns: [BitField; WIDTH],
@@ -22,8 +22,18 @@ impl PartialEq for Board {
         self.cells == other.cells
     }
 }
+
+impl Eq for Board {}
 #[derive(Debug, PartialEq)]
 pub struct BoardConversionError;
+
+impl std::fmt::Display for BoardConversionError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Invalid board format")
+    }
+}
+
+impl std::error::Error for BoardConversionError {}
 
 impl FromStr for Board {
     type Err = BoardConversionError;
@@ -106,9 +116,9 @@ impl Board {
 
 impl From<Board> for String {
     fn from(board: Board) -> Self {
-        let mut ret = String::new();
-        for digit in &board.cells {
-            ret.push_str(&digit.to_string());
+        let mut ret = String::with_capacity(NR_OF_CELLS);
+        for &digit in &board.cells {
+            ret.push((b'0' + digit as u8) as char);
         }
         ret
     }
@@ -129,24 +139,11 @@ pub fn solve(b: Board, start_idx: usize) -> Option<Board> {
         return solve(b, start_idx + 1);
     }
 
-    let mut nr = 1;
-    loop {
-        let solved = if b.is_valid(start_idx, nr) {
+    for nr in 1..=9 {
+        if b.is_valid(start_idx, nr) {
             let br = b.set(start_idx, nr);
-            solve(br, start_idx + 1)
-        } else {
-            None
-        };
-
-        match solved {
-            None => {
-                nr += 1;
-                if nr > 9 {
-                    break;
-                }
-            }
-            Some(_) => {
-                return solved;
+            if let Some(solution) = solve(br, start_idx + 1) {
+                return Some(solution);
             }
         }
     }
@@ -269,6 +266,71 @@ mod tests {
         let b = Board::from_str(solve_string).unwrap();
         let solution = solve(b, 0);
         assert!(String::from(solution.unwrap()) == solution_string);
+    }
+
+    #[test]
+    fn test_from_board_to_string() {
+        let board_str = "000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+        let board = Board::from_str(board_str).unwrap();
+        assert_eq!(String::from(board), board_str);
+    }
+
+    #[test]
+    fn test_from_board_to_string_with_values() {
+        let board_str = "123456789000000000000000000000000000000000000000000000000000000000000000000000000";
+        let board = Board::from_str(board_str).unwrap();
+        assert_eq!(String::from(board), board_str);
+    }
+
+    #[test]
+    fn test_board_debug_format() {
+        let board_str = "000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+        let board = Board::from_str(board_str).unwrap();
+        let debug_str = format!("{:?}", board);
+        assert!(debug_str.contains("Board"));
+    }
+
+    #[test]
+    fn test_error_display() {
+        let error = BoardConversionError;
+        assert_eq!(error.to_string(), "Invalid board format");
+    }
+
+    #[test]
+    fn test_board_equality() {
+        let board1 = Board::from_str("000000000000000000000000000000000000000000000000000000000000000000000000000000000").unwrap();
+        let board2 = Board::from_str("000000000000000000000000000000000000000000000000000000000000000000000000000000000").unwrap();
+        assert_eq!(board1, board2);
+    }
+
+    #[test]
+    fn test_invalid_characters_in_board() {
+        let invalid_boards = [
+            "abcdefghi000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "000000000000000000000000000000000000000000000000000000000000000000000000000000000!",
+            "00000000000000000000000000000000000000000000000000000000000000000000000000000000-1",
+        ];
+        
+        for invalid_board in &invalid_boards {
+            assert!(Board::from_str(invalid_board).is_err());
+        }
+    }
+
+    #[test]
+    fn test_solve_empty_board() {
+        let empty_board = Board::from_str("000000000000000000000000000000000000000000000000000000000000000000000000000000000").unwrap();
+        let solution = solve(empty_board, 0);
+        assert!(solution.is_some());
+        
+        let solved = solution.unwrap();
+        let solved_str = String::from(solved);
+        assert!(!solved_str.contains('0'));
+    }
+
+    #[test]
+    fn test_impossible_board() {
+        let impossible_board = "111000000000000000000000000000000000000000000000000000000000000000000000000000000";
+        assert!(Board::from_str(impossible_board).is_err());
     }
 
     #[test]
