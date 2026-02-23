@@ -9,26 +9,21 @@ fn try_solve(puzzle_str: &str, solution_str: &str) {
         return;
     }
 
-    if let (Ok(puzzle), Ok(solution)) = (
+    if let (Ok(mut puzzle), Ok(solution)) = (
         puzzle_str.parse::<board::Board>(),
         solution_str.parse::<board::Board>(),
     ) {
-        let solution_solved = board::solve(puzzle, 0);
+        let solved = board::solve_puzzle(&mut puzzle);
 
-        match solution_solved {
-            None => {
-                println!("Not solved ! {puzzle_str}");
-            }
-            Some(solution_solved) => {
-                if solution != solution_solved {
-                    println!("wrong solve: {solution} not equal to {solution_solved}");
-                    let a1 = String::from(solution).parse::<board::Board>();
-                    let a2 = String::from(solution_solved).parse::<board::Board>();
+        if !solved {
+            println!("Not solved ! {puzzle_str}");
+        } else if solution != puzzle {
+            println!("wrong solve: {solution} not equal to {puzzle}");
+            let a1 = String::from(solution).parse::<board::Board>();
+            let a2 = String::from(puzzle).parse::<board::Board>();
 
-                    if a1.is_ok() || a2.is_ok() {
-                        eprintln!("Huh");
-                    }
-                }
+            if a1.is_ok() || a2.is_ok() {
+                eprintln!("Huh");
             }
         }
     }
@@ -65,7 +60,7 @@ mod tests {
     fn test_read_and_solve_with_valid_csv() {
         let csv_data = "puzzle,solution\n000000000000000000000000000000000000000000000000000000000000000000000000000000000,123456789456789123789123456234567891567891234891234567345678912678912345912345678\n";
         let mut cursor = Cursor::new(csv_data);
-        
+
         // This should not panic
         read_and_solve(&mut cursor);
     }
@@ -74,7 +69,7 @@ mod tests {
     fn test_read_and_solve_with_empty_csv() {
         let csv_data = "puzzle,solution\n";
         let mut cursor = Cursor::new(csv_data);
-        
+
         // This should not panic
         read_and_solve(&mut cursor);
     }
@@ -83,7 +78,7 @@ mod tests {
     fn test_read_and_solve_with_invalid_lines() {
         let csv_data = "puzzle,solution\ninvalid_line_without_comma\n000000000000000000000000000000000000000000000000000000000000000000000000000000000,123456789456789123789123456234567891567891234891234567345678912678912345912345678\n";
         let mut cursor = Cursor::new(csv_data);
-        
+
         // This should not panic
         read_and_solve(&mut cursor);
     }
@@ -91,6 +86,9 @@ mod tests {
     #[test]
     fn test_try_solve_with_solution_containing_zeros() {
         // This should return early without attempting to solve
-        try_solve("000000000000000000000000000000000000000000000000000000000000000000000000000000000", "000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+        try_solve(
+            "000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        );
     }
 }

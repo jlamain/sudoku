@@ -16,3 +16,9 @@ path = "src/main.rs"
 
 [lib]
 name = "sudoku"
+
+[profile.release]
+debug = "line-tables-only"
+
+[build]
+rustflags = ["-C", "force-frame-pointers=yes"]
